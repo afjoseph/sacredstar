@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+includedir=${prefix}/include/swisseph
+libdir=${exec_prefix}/lib/swisseph
+
+Name: swisseph
+Description: The Swisseph library
+Version: 1.0.0
+Cflags: -I${includedir}
+Libs: -L${libdir} -lswe -lm
