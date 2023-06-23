@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /ftp/swisseph/src</title>
+ </head>
+ <body>
+<h1>Index of /ftp/swisseph/src</h1>
+  <table>
+   <tr><th valign="top"><img src="/icons/blank.gif" alt="[ICO]"></th><th><a href="?C=N;O=A">Name</a></th><th><a href="?C=M;O=A">Last modified</a></th><th><a href="?C=S;O=A">Size</a></th><th><a href="?C=D;O=A">Description</a></th></tr>
+   <tr><th colspan="5"><hr></th></tr>
+<tr><td valign="top"><img src="/icons/back.gif" alt="[PARENTDIR]"></td><td><a href="/ftp/swisseph/">Parent Directory</a></td><td>&nbsp;</td><td align="right">  - </td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/unknown.gif" alt="[   ]"></td><td><a href="swetests">swetests</a></td><td align="right">2022-08-27 22:00  </td><td align="right">1.7M</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/unknown.gif" alt="[   ]"></td><td><a href="libswe.a">libswe.a</a></td><td align="right">2022-08-27 21:56  </td><td align="right">871K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/unknown.gif" alt="[   ]"></td><td><a href="swetest">swetest</a></td><td align="right">2022-08-27 21:56  </td><td align="right">670K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/unknown.gif" alt="[   ]"></td><td><a href="swevents">swevents</a></td><td align="right">2022-08-27 22:00  </td><td align="right">585K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/unknown.gif" alt="[   ]"></td><td><a href="swemini">swemini</a></td><td align="right">2022-08-27 22:00  </td><td align="right">455K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swemptab.h">swemptab.h</a></td><td align="right">2021-04-21 11:19  </td><td align="right">305K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sweph.c">sweph.c</a></td><td align="right">2022-01-03 12:37  </td><td align="right">284K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swecl.c">swecl.c</a></td><td align="right">2022-08-27 14:06  </td><td align="right">221K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swephlib.c">swephlib.c</a></td><td align="right">2022-08-26 19:26  </td><td align="right">161K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swetest.c">swetest.c</a></td><td align="right">2022-08-26 22:27  </td><td align="right">141K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sefstars.txt">sefstars.txt</a></td><td align="right">2021-06-17 08:43  </td><td align="right">133K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swehel.c">swehel.c</a></td><td align="right">2021-07-27 15:38  </td><td align="right">120K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swehouse.c">swehouse.c</a></td><td align="right">2021-12-11 17:28  </td><td align="right">110K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swevents.c">swevents.c</a></td><td align="right">2021-06-28 18:40  </td><td align="right"> 91K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swenut2000a.h">swenut2000a.h</a></td><td align="right">2021-04-21 11:20  </td><td align="right"> 67K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sweasp.c">sweasp.c</a></td><td align="right">2022-12-22 17:32  </td><td align="right"> 62K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swemmoon.c">swemmoon.c</a></td><td align="right">2021-04-21 11:24  </td><td align="right"> 60K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swephexp.h">swephexp.h</a></td><td align="right">2022-08-26 19:31  </td><td align="right"> 40K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sweph.h">sweph.h</a></td><td align="right">2022-08-26 19:33  </td><td align="right"> 34K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swejpl.c">swejpl.c</a></td><td align="right">2021-04-21 11:24  </td><td align="right"> 33K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sweclips.c">sweclips.c</a></td><td align="right">2022-12-22 17:32  </td><td align="right"> 29K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swemplan.c">swemplan.c</a></td><td align="right">2021-04-21 11:25  </td><td align="right"> 27K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sweephe4.c">sweephe4.c</a></td><td align="right">2021-05-05 14:54  </td><td align="right"> 22K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swedllst.c">swedllst.c</a></td><td align="right">2021-04-21 11:23  </td><td align="right"> 21K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swedate.c">swedate.c</a></td><td align="right">2021-04-21 11:22  </td><td align="right"> 20K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swedll.h">swedll.h</a></td><td align="right">2021-12-11 17:28  </td><td align="right"> 17K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sweodef.h">sweodef.h</a></td><td align="right">2021-07-27 11:21  </td><td align="right"> 11K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sweephe4.h">sweephe4.h</a></td><td align="right">2021-05-05 14:54  </td><td align="right">9.6K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swephgen4.c">swephgen4.c</a></td><td align="right">2021-05-05 14:54  </td><td align="right">9.2K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swephlib.h">swephlib.h</a></td><td align="right">2022-08-26 19:27  </td><td align="right">7.6K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="seorbel.txt">seorbel.txt</a></td><td align="right">2020-07-08 10:22  </td><td align="right">5.8K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swevents.h">swevents.h</a></td><td align="right">2021-05-05 14:54  </td><td align="right">4.3K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swejpl.h">swejpl.h</a></td><td align="right">2021-04-21 11:19  </td><td align="right">3.9K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swehouse.h">swehouse.h</a></td><td align="right">2021-04-21 11:18  </td><td align="right">3.6K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swedate.h">swedate.h</a></td><td align="right">2021-04-21 11:16  </td><td align="right">3.1K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="Makefile">Makefile</a></td><td align="right">2022-08-27 22:00  </td><td align="right">2.7K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="swemini.c">swemini.c</a></td><td align="right">2021-12-29 11:46  </td><td align="right">2.5K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="LICENSE.TXT">LICENSE.TXT</a></td><td align="right">2021-04-21 11:26  </td><td align="right">2.3K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="LICENSE">LICENSE</a></td><td align="right">2021-04-21 11:26  </td><td align="right">2.3K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="sedeltat.txt.inactive">sedeltat.txt.inactive</a></td><td align="right">2009-04-03 11:58  </td><td align="right">477 </td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="seleapsec.txt">seleapsec.txt</a></td><td align="right">2014-07-23 15:58  </td><td align="right">282 </td><td>&nbsp;</td></tr>
+   <tr><th colspan="5"><hr></th></tr>
+</table>
+<address>Apache Server at www.astro.com Port 443</address>
+</body></html>

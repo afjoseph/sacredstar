@@ -1,0 +1,3 @@
+original_project/*.o
+original_project/*.a
+lib/libswe.a
