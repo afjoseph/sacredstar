@@ -11,6 +11,9 @@ It can be used to easily cast a chart and:
 - Supports traditional and modern planets
 - Supports sidereal and tropical charts
 
+## Applications using SacredStar
+- [Astrologos](https://astrologos.ai)
+
 ## Installation
 
 Add the library to your Go project
