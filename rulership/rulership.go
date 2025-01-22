@@ -1,11 +1,11 @@
 package rulership
 
 import (
+	"github.com/afjoseph/sacredstar/aspect"
 	"github.com/afjoseph/sacredstar/astropoint"
 	"github.com/afjoseph/sacredstar/chart"
 	"github.com/afjoseph/sacredstar/house"
 	"github.com/afjoseph/sacredstar/pointid"
-	"github.com/afjoseph/sacredstar/zodiacalpos"
 	"github.com/go-playground/errors/v5"
 )
 
@@ -51,7 +51,7 @@ func GetStrength(
 	// Check hard aspects to malefics
 	for _, maleficPointID := range []pointid.PointID{pointid.Mars, pointid.Saturn} {
 		maleficPoint := chrt.MustGetPoint(maleficPointID)
-		asp := p.ZodiacalPos.GetAspect(maleficPoint.ZodiacalPos)
+		asp := p.GetAspect(maleficPoint)
 		if asp != nil && asp.IsHard() {
 			reasons = append(reasons, StrengthReasonAspectToMalefic{})
 			score += reasons[len(reasons)-1].Weight()
@@ -60,8 +60,8 @@ func GetStrength(
 
 	// Check if combust
 	sunPoint := chrt.MustGetPoint(pointid.Sun)
-	asp := p.ZodiacalPos.GetAspect(sunPoint.ZodiacalPos)
-	if asp != nil && asp.Type == zodiacalpos.AspectType_Conjunction {
+	asp := p.GetAspect(sunPoint)
+	if asp != nil && asp.Type == aspect.AspectType_Conjunction {
 		reasons = append(reasons, StrengthReasonCombust{})
 		score += reasons[len(reasons)-1].Weight()
 	}

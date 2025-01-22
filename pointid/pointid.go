@@ -87,7 +87,7 @@ var TraditionalPlanets = []PointID{
 	Saturn,
 }
 
-var ClassicalPlanets = []PointID{
+var ModernPlanets = []PointID{
 	Sun,
 	Moon,
 	Mercury,

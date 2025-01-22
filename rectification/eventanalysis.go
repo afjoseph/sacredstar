@@ -7,13 +7,13 @@ import (
 	"hash/crc32"
 	"time"
 
+	"github.com/afjoseph/sacredstar/astropoint"
 	"github.com/afjoseph/sacredstar/chart"
 	"github.com/afjoseph/sacredstar/house"
 	"github.com/afjoseph/sacredstar/pointid"
 	"github.com/afjoseph/sacredstar/timeandzone"
 	"github.com/afjoseph/sacredstar/util"
 	"github.com/afjoseph/sacredstar/wrapper"
-	"github.com/afjoseph/sacredstar/zodiacalpos"
 )
 
 type EventType string
@@ -155,16 +155,14 @@ func (e Event) analyze(
 	reasons := []Reason{}
 	impHouses := e.EventType.VargaChartType().ImportantHouses()
 	dashaLordHouse := vargaChart.GetHouseFor(dasha.Mahadasha.ToPointID())
-	dashaLordZodPos := vargaChart.GetZodiacalPosFor(dasha.Mahadasha.ToPointID())
+	dashaLord := vargaChart.GetPoint(dasha.Mahadasha.ToPointID())
 	subdashaLordHouse := vargaChart.GetHouseFor(dasha.Antardasha.ToPointID())
-	subdashaLordZodPos := vargaChart.GetZodiacalPosFor(
-		dasha.Antardasha.ToPointID(),
-	)
+	subdashaLord := vargaChart.GetPoint(dasha.Antardasha.ToPointID())
 	karakas := e.EventType.VargaChartType().Karakas()
 	var karakaHouses []house.House
-	karakaLord := map[pointid.PointID]*zodiacalpos.ZodiacalPos{}
+	karakaLords := []*astropoint.AstroPoint{}
 	for _, karaka := range karakas {
-		karakaLord[karaka] = vargaChart.GetZodiacalPosFor(karaka)
+		karakaLords = append(karakaLords, vargaChart.GetPoint(karaka))
 		karakaHouses = append(karakaHouses, vargaChart.GetHouseFor(karaka))
 	}
 
@@ -193,7 +191,7 @@ func (e Event) analyze(
 	// Rule 2: dasha or subdasha lords are aspecting the lord of an important
 	// house OR the lord of an important house is the dasha or subdasha lord
 	for _, impHouse := range impHouses {
-		impHouseLord, err := vargaChart.GetHouseLordFor(
+		impHouseLordID, err := vargaChart.GetHouseLordFor(
 			impHouse,
 			chart.HouseLordPlacement_Traditional,
 		)
@@ -204,7 +202,7 @@ func (e Event) analyze(
 				err,
 			)
 		}
-		if impHouseLord == dasha.Mahadasha.ToPointID() {
+		if impHouseLordID == dasha.Mahadasha.ToPointID() {
 			reasons = append(reasons, NewReason(
 				ReasonType_DashaLordAsHouseLord,
 				fmt.Sprintf(
@@ -216,7 +214,7 @@ func (e Event) analyze(
 			// No need to check for aspects if the dasha or subdasha lord is
 			// the lord of the important house: they are the same planet
 			continue
-		} else if impHouseLord == dasha.Antardasha.ToPointID() {
+		} else if impHouseLordID == dasha.Antardasha.ToPointID() {
 			reasons = append(reasons, NewReason(
 				ReasonType_DashaLordAsHouseLord,
 				fmt.Sprintf(
@@ -230,8 +228,8 @@ func (e Event) analyze(
 			continue
 		}
 
-		impHouseLordZodPos := vargaChart.GetZodiacalPosFor(impHouseLord)
-		if asp := dashaLordZodPos.GetAspect(impHouseLordZodPos); asp != nil {
+		impHouseLord := vargaChart.GetPoint(impHouseLordID)
+		if asp := dashaLord.GetAspect(impHouseLord); asp != nil {
 			if asp.IsHard() {
 				reasons = append(reasons, NewReason(
 					ReasonType_HouseLordAspect_Hard,
@@ -256,7 +254,7 @@ func (e Event) analyze(
 			// 	))
 			// }
 		}
-		if asp := subdashaLordZodPos.GetAspect(impHouseLordZodPos); asp != nil {
+		if asp := subdashaLord.GetAspect(impHouseLord); asp != nil {
 			if asp.IsHard() {
 				reasons = append(reasons, NewReason(
 					ReasonType_HouseLordAspect_Hard,
@@ -283,8 +281,8 @@ func (e Event) analyze(
 	}
 
 	// Rule 3: The karaka is aspecting a dasha or subdasha lord
-	for kl, karakaZodPos := range karakaLord {
-		if asp := dashaLordZodPos.GetAspect(karakaZodPos); asp != nil {
+	for _, kl := range karakaLords {
+		if asp := dashaLord.GetAspect(kl); asp != nil {
 			if asp.IsHard() {
 				reasons = append(reasons, NewReason(
 					ReasonType_KarakaAspect_Hard,
@@ -307,7 +305,7 @@ func (e Event) analyze(
 			// 	))
 			// }
 		}
-		if asp := subdashaLordZodPos.GetAspect(karakaZodPos); asp != nil {
+		if asp := subdashaLord.GetAspect(kl); asp != nil {
 			if asp.IsHard() {
 				reasons = append(reasons, NewReason(
 					ReasonType_KarakaAspect_Hard,
