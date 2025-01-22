@@ -16,7 +16,7 @@ func SanityCheck(swe *wrapper.SwissEph) error {
 		bt,
 		-0.1278, 51.5074, // London
 		TropicalChartType,
-		pointid.ClassicalPlanets,
+		pointid.ModernPlanets,
 	)
 	if err != nil {
 		return fmt.Errorf("error calculating chart: %w", err)

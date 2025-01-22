@@ -1,6 +1,9 @@
 package astropoint
 
 import (
+	"fmt"
+
+	"github.com/afjoseph/sacredstar/aspect"
 	"github.com/afjoseph/sacredstar/house"
 	"github.com/afjoseph/sacredstar/pointid"
 	"github.com/afjoseph/sacredstar/sign"
@@ -21,6 +24,15 @@ func (p *AstroPoint) String() string {
 		p.ID,
 		p.Longitude,
 		p.ZodiacalPos,
+		p.House,
+	)
+}
+
+func (p *AstroPoint) SimpleDescription() string {
+	return fmt.Sprintf(
+		"%s in %s in %s house",
+		p.ID,
+		p.ZodiacalPos.Sign,
 		p.House,
 	)
 }
@@ -107,4 +119,8 @@ func (p *AstroPoint) IsFall() bool {
 		return s == sign.Aries
 	}
 	return false
+}
+
+func (ap *AstroPoint) GetAspect(rhs *AstroPoint) *aspect.Aspect {
+	return aspect.NewAspect(ap.ID, ap.ZodiacalPos, rhs.ID, rhs.ZodiacalPos)
 }

@@ -204,10 +204,6 @@ func (zp *ZodiacalPos) SignDegrees() float64 {
 	return float64(d + m)
 }
 
-func (zp *ZodiacalPos) GetAspect(rhs *ZodiacalPos) *Aspect {
-	return NewAspect(zp, rhs)
-}
-
 func (zp *ZodiacalPos) Opposite() *ZodiacalPos {
 	deg := zp.AbsDegrees() + 180
 	if deg >= 360 {

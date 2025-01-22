@@ -13,6 +13,7 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/afjoseph/sacredstar/aspect"
 	"github.com/afjoseph/sacredstar/astropoint"
 	"github.com/afjoseph/sacredstar/house"
 	"github.com/afjoseph/sacredstar/pointid"
@@ -34,6 +35,7 @@ type Chart struct {
 	Time      timeandzone.TimeAndZone  `json:"time"`
 	ChartType ChartType                `json:"chartType"`
 	Points    []*astropoint.AstroPoint `json:"points"`
+	Aspects   []*aspect.Aspect         `json:"aspects"`
 }
 
 func (c *Chart) String() string {
@@ -151,12 +153,33 @@ func NewChartFromJulianDay(
 		}
 	}
 
+	// For each point, calculate the aspect with other points
+	aspects := []*aspect.Aspect{}
+	for _, p1 := range points {
+		for _, p2 := range points {
+			if p1 == p2 {
+				continue
+			}
+			asp := aspect.NewAspect(
+				p1.ID,
+				p1.ZodiacalPos,
+				p2.ID,
+				p2.ZodiacalPos,
+			)
+			if asp == nil {
+				continue
+			}
+			aspects = append(aspects, asp)
+		}
+	}
+
 	gotime := swe.JulianDayToGoTime(timeInJulian)
 	tm := timeandzone.New(gotime)
 	return &Chart{
 		Time:      tm,
-		Points:    points,
 		ChartType: calcType,
+		Points:    points,
+		Aspects:   aspects,
 	}, nil
 }
 
