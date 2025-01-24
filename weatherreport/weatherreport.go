@@ -352,6 +352,9 @@ func calculateIngressJourney(
 }
 
 func getSpeedRate(p pointid.PointID) time.Duration {
+	// TODO <24-01-2025,afjoseph> For really long periods (e.g., 5 years) it'll
+	// be useless to calculate the granularity of 12 hours, for example.
+	// It'd be best to take the duration of the whole weather report into account
 	switch p {
 	case pointid.Sun:
 		fallthrough
@@ -362,20 +365,20 @@ func getSpeedRate(p pointid.PointID) time.Duration {
 	case pointid.Venus:
 		fallthrough
 	case pointid.Mars:
-		// 6 hours for fast planets
-		return 6 * time.Hour
+		// 12 hours for fast planets
+		return 12 * time.Hour
 	case pointid.Jupiter:
 		fallthrough
 	case pointid.Saturn:
-		// 24 hours for traditional big planets
-		return 24 * time.Hour
+		// 4 days for traditional big planets
+		return 4 * (24 * time.Hour)
 	case pointid.Uranus:
 		fallthrough
 	case pointid.Neptune:
 		fallthrough
 	case pointid.Pluto:
-		// 4 days for outer planets
-		return 4 * (24 * time.Hour)
+		// 2 weeks for outer planets
+		return 14 * (24 * time.Hour)
 	default:
 		panic(errors.Newf("Unknown planet: %s", p))
 	}
