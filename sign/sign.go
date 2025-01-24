@@ -236,3 +236,63 @@ func (s Sign) ModernRuler() pointid.PointID {
 	}
 	return pointid.None
 }
+
+func (s Sign) Next() Sign {
+	switch s {
+	case Aries:
+		return Taurus
+	case Taurus:
+		return Gemini
+	case Gemini:
+		return Cancer
+	case Cancer:
+		return Leo
+	case Leo:
+		return Virgo
+	case Virgo:
+		return Libra
+	case Libra:
+		return Scorpio
+	case Scorpio:
+		return Sagittarius
+	case Sagittarius:
+		return Capricorn
+	case Capricorn:
+		return Aquarius
+	case Aquarius:
+		return Pisces
+	case Pisces:
+		return Aries
+	}
+	panic("Invalid sign")
+}
+
+func (s Sign) Previous() Sign {
+	switch s {
+	case Aries:
+		return Pisces
+	case Taurus:
+		return Aries
+	case Gemini:
+		return Taurus
+	case Cancer:
+		return Gemini
+	case Leo:
+		return Cancer
+	case Virgo:
+		return Leo
+	case Libra:
+		return Virgo
+	case Scorpio:
+		return Libra
+	case Sagittarius:
+		return Scorpio
+	case Capricorn:
+		return Sagittarius
+	case Aquarius:
+		return Capricorn
+	case Pisces:
+		return Aquarius
+	}
+	panic("Invalid sign")
+}

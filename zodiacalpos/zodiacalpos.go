@@ -181,6 +181,29 @@ func (zp *ZodiacalPos) DiffInAbsDegrees(rhs *ZodiacalPos) float64 {
 	return ret
 }
 
+func (zp *ZodiacalPos) DiffInDirectionalDegrees(rhs *ZodiacalPos) float64 {
+	llhs := zp.AbsDegrees()
+	rrhs := rhs.AbsDegrees()
+
+	// Calculate both possible differences
+	clockwise := rrhs - llhs
+	if clockwise < 0 {
+		clockwise += 360
+	}
+
+	counterClockwise := llhs - rrhs
+	if counterClockwise < 0 {
+		counterClockwise += 360
+	}
+
+	// Return the smaller difference, with sign indicating direction
+	// Positive = clockwise, Negative = counterclockwise
+	if clockwise <= counterClockwise {
+		return clockwise
+	}
+	return -counterClockwise
+}
+
 func (zp *ZodiacalPos) Add(rhs *ZodiacalPos) *ZodiacalPos {
 	var sum *ZodiacalPos
 	if zp.GreaterThan(rhs) {
