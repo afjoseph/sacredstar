@@ -2,6 +2,7 @@ package aspect
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/afjoseph/sacredstar/pointid"
 	"github.com/afjoseph/sacredstar/zodiacalpos"
@@ -89,7 +90,7 @@ func NewAspect(
 		return true
 	})
 	if !didFind {
-		return nil
+		aspectType = AspectType_None
 	}
 	return &Aspect{
 		P1:     lhsID,
@@ -99,8 +100,17 @@ func NewAspect(
 	}
 }
 
+func (a *Aspect) Orb() int {
+	return int(orbTable[a.Type])
+}
+
 func (a *Aspect) String() string {
-	return fmt.Sprintf("%s %f", a.Type, a.Degree)
+	return fmt.Sprintf("Aspect{P1: %s, P2: %s, Degree: %f, Type: %s}",
+		a.P1,
+		a.P2,
+		a.Degree,
+		a.Type,
+	)
 }
 
 func (a *Aspect) Int() int {
@@ -115,4 +125,14 @@ func (a *Aspect) IsHard() bool {
 
 func (a *Aspect) IsSoft() bool {
 	return a.Type == AspectType_Trine || a.Type == AspectType_Sextile
+}
+
+func (a *Aspect) Equals(other *Aspect, ignoreDegree bool) bool {
+	if !ignoreDegree {
+		eps := 0.000001
+		if math.Abs(a.Degree-other.Degree) > eps {
+			return false
+		}
+	}
+	return a.P1 == other.P1 && a.P2 == other.P2 && a.Type == other.Type
 }

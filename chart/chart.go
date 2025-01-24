@@ -166,7 +166,7 @@ func NewChartFromJulianDay(
 				p2.ID,
 				p2.ZodiacalPos,
 			)
-			if asp == nil {
+			if asp == nil || asp.Type == aspect.AspectType_None {
 				continue
 			}
 			aspects = append(aspects, asp)
@@ -418,4 +418,13 @@ func (c *Chart) MustGetPoint(id pointid.PointID) *astropoint.AstroPoint {
 		panic(errors.Newf("point %s not found in chart: %s", id, c.String()))
 	}
 	return p
+}
+
+func (c *Chart) HasAspectIgnoreDegree(asp *aspect.Aspect) bool {
+	for _, a := range c.Aspects {
+		if asp.Equals(a, true) {
+			return true
+		}
+	}
+	return false
 }
