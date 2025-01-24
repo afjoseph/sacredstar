@@ -166,7 +166,7 @@ func NewChartFromJulianDay(
 				p2.ID,
 				p2.ZodiacalPos,
 			)
-			if asp == nil {
+			if asp == nil || asp.Type == aspect.AspectType_None {
 				continue
 			}
 			aspects = append(aspects, asp)
@@ -290,6 +290,8 @@ func calculatePlanet(
 	if chartType.IsVarga() {
 		flag = C.int(C.SEFLG_SIDEREAL)
 	}
+	// Add SEFLG_SPEED to flag
+	flag |= C.int(C.SEFLG_SPEED)
 	errBytes := make([]byte, C.AS_MAXCH)
 	errPtr := (*C.char)(C.CBytes(errBytes))
 	defer C.free(unsafe.Pointer(errPtr))
@@ -331,15 +333,17 @@ func calculatePlanet(
 				chartType, err)
 		}
 	}
+	// isRetrograde :=
 	h := house.HouseNone
 	if ascendantZodiacalPos != nil {
 		h = house.NewHouseFromSign(zp.Sign, ascendantZodiacalPos.Sign)
 	}
 	p := &astropoint.AstroPoint{
-		ID:          pid,
-		Longitude:   float64(xx[0]),
-		ZodiacalPos: zp,
-		House:       h,
+		ID:           pid,
+		Longitude:    float64(xx[0]),
+		ZodiacalPos:  zp,
+		House:        h,
+		IsRetrograde: float64(xx[3]) < 0,
 	}
 
 	return p, nil
@@ -418,4 +422,13 @@ func (c *Chart) MustGetPoint(id pointid.PointID) *astropoint.AstroPoint {
 		panic(errors.Newf("point %s not found in chart: %s", id, c.String()))
 	}
 	return p
+}
+
+func (c *Chart) HasAspectIgnoreDegree(asp *aspect.Aspect) bool {
+	for _, a := range c.Aspects {
+		if asp.Equals(a, true) {
+			return true
+		}
+	}
+	return false
 }

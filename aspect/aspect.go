@@ -2,6 +2,7 @@ package aspect
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/afjoseph/sacredstar/pointid"
 	"github.com/afjoseph/sacredstar/zodiacalpos"
@@ -44,6 +45,22 @@ func (at AspectType) String() string {
 		return "Sextile"
 	}
 	return "None"
+}
+
+func (a AspectType) Degree() float64 {
+	switch a {
+	case AspectType_Conjunction:
+		return 0
+	case AspectType_Opposition:
+		return 180
+	case AspectType_Trine:
+		return 120
+	case AspectType_Square:
+		return 90
+	case AspectType_Sextile:
+		return 60
+	}
+	return 0
 }
 
 type Aspect struct {
@@ -89,7 +106,7 @@ func NewAspect(
 		return true
 	})
 	if !didFind {
-		return nil
+		aspectType = AspectType_None
 	}
 	return &Aspect{
 		P1:     lhsID,
@@ -99,8 +116,17 @@ func NewAspect(
 	}
 }
 
+func (a *Aspect) Orb() int {
+	return int(orbTable[a.Type])
+}
+
 func (a *Aspect) String() string {
-	return fmt.Sprintf("%s %f", a.Type, a.Degree)
+	return fmt.Sprintf("Aspect{P1: %s, P2: %s, Degree: %f, Type: %s}",
+		a.P1,
+		a.P2,
+		a.Degree,
+		a.Type,
+	)
 }
 
 func (a *Aspect) Int() int {
@@ -115,4 +141,14 @@ func (a *Aspect) IsHard() bool {
 
 func (a *Aspect) IsSoft() bool {
 	return a.Type == AspectType_Trine || a.Type == AspectType_Sextile
+}
+
+func (a *Aspect) Equals(other *Aspect, ignoreDegree bool) bool {
+	if !ignoreDegree {
+		eps := 0.000001
+		if math.Abs(a.Degree-other.Degree) > eps {
+			return false
+		}
+	}
+	return a.P1 == other.P1 && a.P2 == other.P2 && a.Type == other.Type
 }

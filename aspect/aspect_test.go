@@ -13,7 +13,6 @@ func TestNewAspect(t *testing.T) {
 		title              string
 		expectedAspectType AspectType
 		expectedDegree     float64
-		expectedShouldFind bool
 		inputLHS           *zodiacalpos.ZodiacalPos
 		inputRHS           *zodiacalpos.ZodiacalPos
 	}
@@ -25,7 +24,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(0),
 			expectedAspectType: AspectType_Conjunction,
 			expectedDegree:     0,
-			expectedShouldFind: true,
 		},
 		// Test for opposition (180 degrees apart)
 		testCase{
@@ -34,7 +32,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(180),
 			expectedAspectType: AspectType_Opposition,
 			expectedDegree:     180,
-			expectedShouldFind: true,
 		},
 		// Test for trine (120 degrees apart)
 		testCase{
@@ -43,7 +40,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(120),
 			expectedAspectType: AspectType_Trine,
 			expectedDegree:     120,
-			expectedShouldFind: true,
 		},
 		// Test for square (90 degrees apart)
 		testCase{
@@ -52,7 +48,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(90),
 			expectedAspectType: AspectType_Square,
 			expectedDegree:     90,
-			expectedShouldFind: true,
 		},
 		// Test for sextile (60 degrees apart)
 		testCase{
@@ -61,7 +56,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(60),
 			expectedAspectType: AspectType_Sextile,
 			expectedDegree:     60,
-			expectedShouldFind: true,
 		},
 		// Test for no aspect (not an exact aspect degree)
 		testCase{
@@ -69,8 +63,7 @@ func TestNewAspect(t *testing.T) {
 			inputLHS:           zodiacalpos.NewZodiacalPosFromLongitude(0),
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(50),
 			expectedAspectType: AspectType_None,
-			expectedDegree:     0, // or the actual degree difference if that's what NewAspect returns
-			expectedShouldFind: false,
+			expectedDegree:     50,
 		},
 		testCase{
 			title:              "conjunction at the edge of the zodiac",
@@ -78,7 +71,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(1),
 			expectedAspectType: AspectType_Conjunction,
 			expectedDegree:     2,
-			expectedShouldFind: true,
 		},
 		testCase{
 			title:              "opposition across the zodiac edge",
@@ -86,7 +78,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(179),
 			expectedAspectType: AspectType_Opposition,
 			expectedDegree:     180,
-			expectedShouldFind: true,
 		},
 		testCase{
 			title:              "square across the zodiac edge",
@@ -94,7 +85,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(89),
 			expectedAspectType: AspectType_Square,
 			expectedDegree:     90,
-			expectedShouldFind: true,
 		},
 		testCase{
 			title:              "trine at 0 degrees",
@@ -102,7 +92,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(120),
 			expectedAspectType: AspectType_Trine,
 			expectedDegree:     120,
-			expectedShouldFind: true,
 		},
 		testCase{
 			title:              "conjunction at the same edge degree",
@@ -110,7 +99,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(0),
 			expectedAspectType: AspectType_Conjunction,
 			expectedDegree:     0,
-			expectedShouldFind: true,
 		},
 		testCase{
 			title:              "test normalization of large degree numbers",
@@ -118,7 +106,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(600), // 600 should normalize to 240
 			expectedAspectType: AspectType_Trine,
 			expectedDegree:     120,
-			expectedShouldFind: true,
 		},
 		testCase{
 			title:              "test aspect with orb",
@@ -126,7 +113,6 @@ func TestNewAspect(t *testing.T) {
 			inputRHS:           zodiacalpos.NewZodiacalPosFromLongitude(150.5), // Slightly more than a trine
 			expectedAspectType: AspectType_Sextile,                             // Assuming no aspect due to tight orb
 			expectedDegree:     60.5,
-			expectedShouldFind: true,
 		},
 	} {
 		t.Run(tc.title, func(t *testing.T) {
@@ -137,10 +123,6 @@ func TestNewAspect(t *testing.T) {
 				pointid.Sun,
 				tc.inputRHS,
 			)
-			if !tc.expectedShouldFind {
-				assert.Nil(t, aspect)
-				return
-			}
 			assert.NotNil(t, aspect)
 
 			assert.Equal(t, tc.expectedAspectType, aspect.Type)
