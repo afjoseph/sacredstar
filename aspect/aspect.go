@@ -47,6 +47,22 @@ func (at AspectType) String() string {
 	return "None"
 }
 
+func (a AspectType) Degree() float64 {
+	switch a {
+	case AspectType_Conjunction:
+		return 0
+	case AspectType_Opposition:
+		return 180
+	case AspectType_Trine:
+		return 120
+	case AspectType_Square:
+		return 90
+	case AspectType_Sextile:
+		return 60
+	}
+	return 0
+}
+
 type Aspect struct {
 	P1     pointid.PointID `json:"p1"`
 	P2     pointid.PointID `json:"p2"`

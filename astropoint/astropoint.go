@@ -8,33 +8,43 @@ import (
 	"github.com/afjoseph/sacredstar/pointid"
 	"github.com/afjoseph/sacredstar/sign"
 	"github.com/afjoseph/sacredstar/zodiacalpos"
-	"github.com/davecgh/go-spew/spew"
 )
 
 type AstroPoint struct {
-	ID          pointid.PointID          `json:"id"`
-	Longitude   float64                  `json:"longitude"`
-	ZodiacalPos *zodiacalpos.ZodiacalPos `json:"zodiacalPos"`
-	House       house.House              `json:"house"`
+	ID           pointid.PointID          `json:"id"`
+	Longitude    float64                  `json:"longitude"`
+	ZodiacalPos  *zodiacalpos.ZodiacalPos `json:"zodiacalPos"`
+	House        house.House              `json:"house"`
+	IsRetrograde bool                     `json:"isRetrograde"`
 }
 
 func (p *AstroPoint) String() string {
-	return spew.Sprintf(
-		"%s: longitude = %f, zodpos = {%s}, house = %s",
+	return fmt.Sprintf(
+		"AstroPoint{ID: %s, Longitude: %f, ZodiacalPos: %s, House: %s, IsRetrograde: %t}",
 		p.ID,
 		p.Longitude,
 		p.ZodiacalPos,
 		p.House,
+		p.IsRetrograde,
 	)
 }
 
 func (p *AstroPoint) SimpleDescription() string {
-	return fmt.Sprintf(
-		"%s in %s in %s house",
-		p.ID,
-		p.ZodiacalPos.Sign,
-		p.House,
-	)
+	if p.IsRetrograde {
+		return fmt.Sprintf(
+			"%s in %s in %s house (rx)",
+			p.ID,
+			p.ZodiacalPos.Sign,
+			p.House,
+		)
+	} else {
+		return fmt.Sprintf(
+			"%s in %s in %s house",
+			p.ID,
+			p.ZodiacalPos.Sign,
+			p.House,
+		)
+	}
 }
 
 func (p *AstroPoint) IsDomicile() bool {

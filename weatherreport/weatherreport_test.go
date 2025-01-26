@@ -1,14 +1,22 @@
 package weatherreport
 
 import (
+	"log/slog"
+	"os"
 	"testing"
 	"time"
 
 	"github.com/afjoseph/sacredstar/chart"
 	"github.com/afjoseph/sacredstar/pointid"
+	"github.com/afjoseph/sacredstar/prettyslog"
 	"github.com/afjoseph/sacredstar/wrapper"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 )
+
+func init() {
+	slog.SetDefault(slog.New(prettyslog.NewPrettyJSONHandler(os.Stdout, nil)))
+}
 
 func TestNew(t *testing.T) {
 	swe := wrapper.NewWithBuiltinPath()
@@ -76,7 +84,7 @@ func TestNew(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := New(swe, tt.start, tt.end)
-			// spew.Dump(got)
+			spew.Dump(got)
 			assert.NoError(t, err)
 			m := make(map[string][]string)
 			for k, v := range got {
@@ -119,6 +127,22 @@ func TestCalculateAspectJourney(t *testing.T) {
 			targetTime: time.Date(2025, 1, 26, 16, 49, 0, 0, time.UTC),
 			// This is a retrograde of Venus in Pisces/Aries where Neptune is
 			// copresent
+			wantDuration: 2496 * time.Hour,
+			wantJourney:  0.002404,
+		},
+		testCase{
+			name:         "3",
+			targetP1:     pointid.Neptune,
+			targetP2:     pointid.Pluto,
+			targetTime:   time.Date(2025, 6, 30, 12, 26, 0, 0, time.UTC),
+			wantDuration: 2496 * time.Hour,
+			wantJourney:  0.002404,
+		},
+		testCase{
+			name:         "4",
+			targetP1:     pointid.Saturn,
+			targetP2:     pointid.Neptune,
+			targetTime:   time.Date(2025, 4, 30, 12, 26, 0, 0, time.UTC),
 			wantDuration: 2496 * time.Hour,
 			wantJourney:  0.002404,
 		},
