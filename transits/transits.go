@@ -58,6 +58,28 @@ func calculate(swe *wrapper.SwissEph, t time.Time) ([]Transit, error) {
 	}
 
 	transits := []Transit{}
+	// Calculate ingress journeys
+	for _, p := range chrt.Points {
+		if p.ID == pointid.ASC {
+			// Skip ascendant calculations
+			continue
+		}
+		fmt.Printf("Calculating ingress journey for %s\n", p)
+		duration, journey, start, end, err := calculateIngressJourney(swe, p, t)
+		if err != nil {
+			return nil, errors.Wrapf(err, "while calculating journey for %s", t)
+		}
+		durationInDays := int(duration.Hours() / 24)
+		transits = append(transits, &TransitIngress{
+			Date:        t,
+			P:           p,
+			Journey:     journey,
+			DaysElapsed: durationInDays,
+			Start:       start,
+			End:         end,
+		})
+	}
+
 	// Calculate aspect journeys
 	for _, asp := range chrt.Aspects {
 		if asp.P1 == pointid.ASC || asp.P2 == pointid.ASC {
@@ -85,27 +107,6 @@ func calculate(swe *wrapper.SwissEph, t time.Time) ([]Transit, error) {
 		})
 	}
 
-	// Calculate ingress journeys
-	for _, p := range chrt.Points {
-		if p.ID == pointid.ASC {
-			// Skip ascendant calculations
-			continue
-		}
-		fmt.Printf("Calculating ingress journey for %s\n", p)
-		duration, journey, start, end, err := calculateIngressJourney(swe, p, t)
-		if err != nil {
-			return nil, errors.Wrapf(err, "while calculating journey for %s", t)
-		}
-		durationInDays := int(duration.Hours() / 24)
-		transits = append(transits, &TransitIngress{
-			Date:        t,
-			P:           p,
-			Journey:     journey,
-			DaysElapsed: durationInDays,
-			Start:       start,
-			End:         end,
-		})
-	}
 	return transits, nil
 }
 

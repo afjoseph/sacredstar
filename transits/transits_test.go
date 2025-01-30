@@ -88,12 +88,12 @@ func TestCalculateAspectJourney(t *testing.T) {
 
 	tests := []testCase{
 		testCase{
-			name:         "1",
+			name:         "fast conjunction in Aquarius",
 			targetP1:     pointid.Pluto,
 			targetP2:     pointid.Sun,
 			targetTime:   time.Date(2025, 1, 24, 0, 0, 0, 0, time.UTC),
-			wantDuration: 231 * time.Hour,
-			wantJourney:  0.727,
+			wantDuration: 240 * time.Hour,
+			wantJourney:  0.70,
 		},
 		testCase{
 			name:       "2",
@@ -102,15 +102,15 @@ func TestCalculateAspectJourney(t *testing.T) {
 			targetTime: time.Date(2025, 1, 29, 0, 0, 0, 0, time.UTC),
 			// This is a retrograde of Venus in Pisces/Aries where Neptune is
 			// copresent
-			wantDuration: 346 * time.Hour,
+			wantDuration: 348 * time.Hour,
 			wantJourney:  0.242424,
 		},
 		testCase{
-			name:         "3",
+			name:         "slow moving sextile",
 			targetP1:     pointid.Neptune,
 			targetP2:     pointid.Pluto,
 			targetTime:   time.Date(2025, 6, 30, 0, 0, 0, 0, time.UTC),
-			wantDuration: 129696 * time.Hour,
+			wantDuration: 129552 * time.Hour,
 			wantJourney:  0.335492,
 		},
 		testCase{
@@ -118,16 +118,16 @@ func TestCalculateAspectJourney(t *testing.T) {
 			targetP1:     pointid.Saturn,
 			targetP2:     pointid.Neptune,
 			targetTime:   time.Date(2025, 4, 30, 0, 0, 0, 0, time.UTC),
-			wantDuration: 9030 * time.Hour,
-			wantJourney:  0.0606,
+			wantDuration: 9048 * time.Hour,
+			wantJourney:  0.055814,
 		},
 		testCase{
-			name:         "5",
+			name:         "fast moving trine",
 			targetP1:     pointid.Moon,
 			targetP2:     pointid.Uranus,
 			targetTime:   time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
 			wantDuration: 19 * time.Hour,
-			wantJourney:  0.5384,
+			wantJourney:  0.55172,
 		},
 		testCase{
 			name:         "6",
@@ -142,8 +142,16 @@ func TestCalculateAspectJourney(t *testing.T) {
 			targetP1:     pointid.Mars,
 			targetP2:     pointid.Pluto,
 			targetTime:   time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
-			wantDuration: 2425 * time.Hour,
-			wantJourney:  0.761,
+			wantDuration: 2110 * time.Hour,
+			wantJourney:  0.835,
+		},
+		testCase{
+			name:         "8",
+			targetP1:     pointid.Jupiter,
+			targetP2:     pointid.Saturn,
+			targetTime:   time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
+			wantDuration: 2110 * time.Hour,
+			wantJourney:  0.835,
 		},
 	}
 
@@ -177,7 +185,7 @@ func TestCalculateAspectJourney(t *testing.T) {
 				t,
 				tt.wantJourney,
 				gotJourney,
-				0.1,
+				0.01,
 				"actual: %f, want: %f",
 				gotJourney,
 				tt.wantJourney,
