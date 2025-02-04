@@ -8,50 +8,77 @@ import (
 	"github.com/afjoseph/sacredstar/astropoint"
 	"github.com/afjoseph/sacredstar/chart"
 	"github.com/afjoseph/sacredstar/pointid"
+	"github.com/afjoseph/sacredstar/unixtime"
 	"github.com/afjoseph/sacredstar/wrapper"
 	"github.com/afjoseph/sacredstar/zodiacalpos"
 	"github.com/go-playground/errors/v5"
 )
 
 type TransitIngress struct {
-	Date        time.Time              `json:"date"`
-	P           *astropoint.AstroPoint `json:"p"`
-	Journey     float64                `json:"journey"`
-	DaysElapsed int                    `json:"daysElapsed"`
-	Start       time.Time              `json:"start"`
-	End         time.Time              `json:"end"`
+	transitBase
+	P *astropoint.AstroPoint `json:"point"`
 }
 
 func (t *TransitIngress) String() string {
 	return fmt.Sprintf(
 		"TransitIngress{Date: %s, P: %s, Journey: %.2f, DaysElapsed: %d, Start: %s, End: %s}",
-		t.Date,
+		t.transitBase.Date.Format("2006-01-02"),
 		t.P,
-		t.Journey,
-		t.DaysElapsed,
-		t.Start.Format("2006-01-02"),
-		t.End.Format("2006-01-02"),
+		t.transitBase.Journey,
+		t.transitBase.DaysElapsed,
+		t.transitBase.Start.Format("2006-01-02"),
+		t.transitBase.End.Format("2006-01-02"),
 	)
 }
 
-func (t *TransitIngress) Type() TransitType {
+func (t *TransitIngress) GetType() TransitType {
 	return TransitTypeIngress
 }
 
 func (t *TransitIngress) GetJourney() float64 {
-	return t.Journey
+	return t.transitBase.Journey
 }
 
 func (t *TransitIngress) GetDuration() int {
-	return t.DaysElapsed
+	return t.transitBase.DaysElapsed
 }
 
-func (t *TransitIngress) GetStart() time.Time {
-	return t.Start
+func (t *TransitIngress) GetStart() unixtime.UnixTime {
+	return t.transitBase.Start
 }
 
-func (t *TransitIngress) GetEnd() time.Time {
-	return t.End
+func (t *TransitIngress) GetEnd() unixtime.UnixTime {
+	return t.transitBase.End
+}
+
+func newTransitIngress(
+	swe *wrapper.SwissEph,
+	targetPoint *astropoint.AstroPoint,
+	targetTime time.Time,
+) (*TransitIngress, error) {
+	duration, journey, start, end, err := calculateIngressJourney(
+		swe,
+		targetPoint,
+		targetTime,
+	)
+	if err != nil {
+		return nil, errors.Wrapf(
+			err,
+			"while calculating journey for %s",
+			targetPoint,
+		)
+	}
+	return &TransitIngress{
+		transitBase: transitBase{
+			Type:        TransitTypeIngress,
+			Date:        unixtime.New(targetTime),
+			Journey:     journey,
+			DaysElapsed: int(duration.Hours() / 24),
+			Start:       unixtime.New(start),
+			End:         unixtime.New(end),
+		},
+		P: targetPoint,
+	}, nil
 }
 
 func calculateIngressJourney(
