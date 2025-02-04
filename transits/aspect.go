@@ -8,49 +8,76 @@ import (
 	"github.com/afjoseph/sacredstar/aspect"
 	"github.com/afjoseph/sacredstar/chart"
 	"github.com/afjoseph/sacredstar/pointid"
+	"github.com/afjoseph/sacredstar/unixtime"
 	"github.com/afjoseph/sacredstar/wrapper"
 	"github.com/go-playground/errors/v5"
 )
 
 type TransitAspect struct {
-	Date        time.Time      `json:"date"`
-	Aspect      *aspect.Aspect `json:"aspect"`
-	Journey     float64        `json:"journey"`
-	DaysElapsed int            `json:"daysElapsed"`
-	Start       time.Time      `json:"start"`
-	End         time.Time      `json:"end"`
+	transitBase
+	Aspect *aspect.Aspect `json:"aspect"`
 }
 
 func (t *TransitAspect) String() string {
 	return fmt.Sprintf(
 		"TransitAspect{Date: %s, Aspect: %s, Journey: %.2f, DaysElapsed: %d, Start: %s, End: %s}",
-		t.Date,
+		t.transitBase.Date.Format("2006-01-02"),
 		t.Aspect,
-		t.Journey,
-		t.DaysElapsed,
-		t.Start.Format("2006-01-02"),
-		t.End.Format("2006-01-02"),
+		t.transitBase.Journey,
+		t.transitBase.DaysElapsed,
+		t.transitBase.Start.Format("2006-01-02"),
+		t.transitBase.End.Format("2006-01-02"),
 	)
 }
 
-func (t *TransitAspect) Type() TransitType {
+func (t *TransitAspect) GetType() TransitType {
 	return TransitTypeAspect
 }
 
 func (t *TransitAspect) GetJourney() float64 {
-	return t.Journey
+	return t.transitBase.Journey
 }
 
 func (t *TransitAspect) GetDuration() int {
-	return t.DaysElapsed
+	return t.transitBase.DaysElapsed
 }
 
-func (t *TransitAspect) GetStart() time.Time {
-	return t.Start
+func (t *TransitAspect) GetStart() unixtime.UnixTime {
+	return t.transitBase.Start
 }
 
-func (t *TransitAspect) GetEnd() time.Time {
-	return t.End
+func (t *TransitAspect) GetEnd() unixtime.UnixTime {
+	return t.transitBase.End
+}
+
+func newTransitAspect(
+	swe *wrapper.SwissEph,
+	targetAspect *aspect.Aspect,
+	targetAspectTime time.Time,
+) (*TransitAspect, error) {
+	duration, journey, start, end, err := calculateAspectJourney(
+		swe,
+		targetAspect,
+		targetAspectTime,
+	)
+	if err != nil {
+		return nil, errors.Wrapf(
+			err,
+			"while calculating journey for %s",
+			targetAspect,
+		)
+	}
+	return &TransitAspect{
+		transitBase: transitBase{
+			Type:        TransitTypeAspect,
+			Date:        unixtime.New(targetAspectTime),
+			Journey:     journey,
+			DaysElapsed: int(duration.Hours() / 24),
+			Start:       unixtime.New(start),
+			End:         unixtime.New(end),
+		},
+		Aspect: targetAspect,
+	}, nil
 }
 
 func calculateAspectJourney(

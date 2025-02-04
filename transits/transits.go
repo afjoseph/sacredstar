@@ -1,36 +1,84 @@
 package transits
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/afjoseph/sacredstar/chart"
 	"github.com/afjoseph/sacredstar/pointid"
+	"github.com/afjoseph/sacredstar/unixtime"
 	"github.com/afjoseph/sacredstar/wrapper"
 	"github.com/go-playground/errors/v5"
 )
 
-type TransitType int
+type TransitType string
 
 const (
-	TransitTypeNone TransitType = iota
-	TransitTypeAspect
-	TransitTypeIngress
+	TransitTypeAspect  TransitType = "aspect"
+	TransitTypeIngress TransitType = "ingress"
 )
 
 type Transit interface {
 	fmt.Stringer
-	Type() TransitType
+	GetType() TransitType
 	GetJourney() float64
 	GetDuration() int
-	GetStart() time.Time
-	GetEnd() time.Time
+	GetStart() unixtime.UnixTime
+	GetEnd() unixtime.UnixTime
+}
+
+type transitBase struct {
+	Type        TransitType       `json:"type"`
+	Date        unixtime.UnixTime `json:"date"`
+	Journey     float64           `json:"journey"`
+	DaysElapsed int               `json:"daysElapsed"`
+	Start       unixtime.UnixTime `json:"start"`
+	End         unixtime.UnixTime `json:"end"`
+}
+
+type Transits []Transit
+
+func (tss *Transits) UnmarshalJSON(data []byte) error {
+	// Unmarshal into []json.RawMessage
+	var rawList []json.RawMessage
+	if err := json.Unmarshal(data, &rawList); err != nil {
+		return errors.Wrapf(err, "while unmarshalling transits")
+	}
+
+	// Process the type
+	for _, raw := range rawList {
+		var base transitBase
+		if err := json.Unmarshal(raw, &base); err != nil {
+			return errors.Wrapf(err, "while unmarshalling transit base")
+		}
+
+		var t Transit
+		switch base.Type {
+		case TransitTypeAspect:
+			var ta TransitAspect
+			if err := json.Unmarshal(raw, &ta); err != nil {
+				return errors.Wrapf(err, "while unmarshalling transit aspect")
+			}
+			t = &ta
+		case TransitTypeIngress:
+			var ti TransitIngress
+			if err := json.Unmarshal(raw, &ti); err != nil {
+				return errors.Wrapf(err, "while unmarshalling transit ingress")
+			}
+			t = &ti
+		default:
+			return errors.Newf("unknown transit type: %s", base.Type)
+		}
+		*tss = append(*tss, t)
+	}
+	return nil
 }
 
 func New(
 	swe *wrapper.SwissEph,
 	t time.Time,
-) ([]Transit, error) {
+) (Transits, error) {
 	tt, err := calculate(swe, t)
 	if err != nil {
 		return nil, errors.Wrapf(
@@ -42,7 +90,7 @@ func New(
 	return tt, err
 }
 
-func calculate(swe *wrapper.SwissEph, t time.Time) ([]Transit, error) {
+func calculate(swe *wrapper.SwissEph, t time.Time) (Transits, error) {
 	// Cast a chart
 	chrt, err := chart.NewChartFromJulianDay(
 		swe,
@@ -63,19 +111,15 @@ func calculate(swe *wrapper.SwissEph, t time.Time) ([]Transit, error) {
 			continue
 		}
 		// fmt.Printf("Calculating ingress journey for %s\n", p)
-		duration, journey, start, end, err := calculateIngressJourney(swe, p, t)
+		ts, err := newTransitIngress(swe, p, t)
 		if err != nil {
-			return nil, errors.Wrapf(err, "while calculating journey for %s", t)
+			return nil, errors.Wrapf(
+				err,
+				"while calculating ingress journey for %s",
+				t,
+			)
 		}
-		durationInDays := int(duration.Hours() / 24)
-		transits = append(transits, &TransitIngress{
-			Date:        t,
-			P:           p,
-			Journey:     journey,
-			DaysElapsed: durationInDays,
-			Start:       start,
-			End:         end,
-		})
+		transits = append(transits, ts)
 	}
 
 	// Calculate aspect journeys
@@ -86,23 +130,15 @@ func calculate(swe *wrapper.SwissEph, t time.Time) ([]Transit, error) {
 		}
 
 		// fmt.Printf("Calculating aspect journey for %s\n", asp)
-		duration, journey, start, end, err := calculateAspectJourney(
-			swe,
-			asp,
-			t,
-		)
+		ts, err := newTransitAspect(swe, asp, t)
 		if err != nil {
-			return nil, errors.Wrapf(err, "while calculating journey for %s", t)
+			return nil, errors.Wrapf(
+				err,
+				"while calculating aspect journey for %s",
+				t,
+			)
 		}
-		durationInDays := int(duration.Hours() / 24)
-		transits = append(transits, &TransitAspect{
-			Date:        t,
-			Aspect:      asp,
-			Journey:     journey,
-			DaysElapsed: durationInDays,
-			Start:       start,
-			End:         end,
-		})
+		transits = append(transits, ts)
 	}
 
 	return transits, nil
