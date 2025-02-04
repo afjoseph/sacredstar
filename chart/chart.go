@@ -16,6 +16,7 @@ import (
 	"github.com/afjoseph/sacredstar/aspect"
 	"github.com/afjoseph/sacredstar/astropoint"
 	"github.com/afjoseph/sacredstar/house"
+	"github.com/afjoseph/sacredstar/lunation"
 	"github.com/afjoseph/sacredstar/pointid"
 	"github.com/afjoseph/sacredstar/sign"
 	"github.com/afjoseph/sacredstar/timeandzone"
@@ -36,6 +37,7 @@ type Chart struct {
 	ChartType ChartType                `json:"chartType"`
 	Points    []*astropoint.AstroPoint `json:"points"`
 	Aspects   []*aspect.Aspect         `json:"aspects"`
+	Lunation  *lunation.Lunation       `json:"lunations"`
 }
 
 func (c *Chart) String() string {
@@ -175,12 +177,31 @@ func NewChartFromJulianDay(
 
 	gotime := swe.JulianDayToGoTime(timeInJulian)
 	tm := timeandzone.New(gotime)
-	return &Chart{
+	chrt := &Chart{
 		Time:      tm,
 		ChartType: calcType,
 		Points:    points,
 		Aspects:   aspects,
-	}, nil
+	}
+
+	// Check if the pointIDs includes both the moon and the sun, else we can't
+	// calculate lunations
+	hasPID := func(pid pointid.PointID) bool {
+		for _, p := range points {
+			if p.ID == pid {
+				return true
+			}
+		}
+		return false
+	}
+	if !hasPID(pointid.Moon) || !hasPID(pointid.Sun) {
+		return chrt, nil
+	}
+	chrt.Lunation = lunation.Calculate(
+		chrt.MustGetPoint(pointid.Moon),
+		chrt.MustGetPoint(pointid.Sun),
+	)
+	return chrt, nil
 }
 
 func CalculateAscendant(

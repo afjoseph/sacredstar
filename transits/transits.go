@@ -15,8 +15,9 @@ import (
 type TransitType string
 
 const (
-	TransitTypeAspect  TransitType = "aspect"
-	TransitTypeIngress TransitType = "ingress"
+	TransitTypeAspect   TransitType = "aspect"
+	TransitTypeIngress  TransitType = "ingress"
+	TransitTypeLunation TransitType = "lunation"
 )
 
 type Transit interface {
@@ -67,6 +68,12 @@ func (tss *Transits) UnmarshalJSON(data []byte) error {
 				return errors.Wrapf(err, "while unmarshalling transit ingress")
 			}
 			t = &ti
+		case TransitTypeLunation:
+			var tl TransitLunation
+			if err := json.Unmarshal(raw, &tl); err != nil {
+				return errors.Wrapf(err, "while unmarshalling transit lunation")
+			}
+			t = &tl
 		default:
 			return errors.Newf("unknown transit type: %s", base.Type)
 		}
@@ -139,6 +146,11 @@ func calculate(swe *wrapper.SwissEph, t time.Time) (Transits, error) {
 			)
 		}
 		transits = append(transits, ts)
+	}
+
+	// Calculate lunations
+	if chrt.Lunation != nil {
+		transits = append(transits, newTransitLunation(chrt.Lunation, t))
 	}
 
 	return transits, nil
