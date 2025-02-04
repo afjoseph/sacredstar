@@ -8,11 +8,9 @@ import (
 	"github.com/afjoseph/sacredstar/unixtime"
 )
 
-type LunationType string
-
 type TransitLunation struct {
 	transitBase
-	Lunation *lunation.Lunation
+	Lunation *lunation.Lunation `json:"lunation"`
 }
 
 func (t *TransitLunation) String() string {
