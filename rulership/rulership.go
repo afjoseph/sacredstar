@@ -25,6 +25,20 @@ func MustFindRuler(
 	return ruler
 }
 
+// IsCombust returns true if p is conjunct the Sun
+//
+// The Sun is never combust by its own light
+func IsCombust(
+	chrt *chart.Chart,
+	p *astropoint.AstroPoint,
+) bool {
+	if p.ID == pointid.Sun {
+		return false
+	}
+	asp := p.GetAspect(chrt.MustGetPoint(pointid.Sun))
+	return asp != nil && asp.Type == aspect.AspectType_Conjunction
+}
+
 func GetStrength(
 	chrt *chart.Chart,
 	p *astropoint.AstroPoint,
@@ -50,6 +64,11 @@ func GetStrength(
 	}
 	// Check hard aspects to malefics
 	for _, maleficPointID := range []pointid.PointID{pointid.Mars, pointid.Saturn} {
+		// Skip if the point is a malefic itself
+		if p.ID == maleficPointID {
+			continue
+		}
+
 		maleficPoint := chrt.MustGetPoint(maleficPointID)
 		asp := p.GetAspect(maleficPoint)
 		if asp != nil && asp.IsHard() {
@@ -59,9 +78,7 @@ func GetStrength(
 	}
 
 	// Check if combust
-	sunPoint := chrt.MustGetPoint(pointid.Sun)
-	asp := p.GetAspect(sunPoint)
-	if asp != nil && asp.Type == aspect.AspectType_Conjunction {
+	if IsCombust(chrt, p) {
 		reasons = append(reasons, StrengthReasonCombust{})
 		score += reasons[len(reasons)-1].Weight()
 	}
