@@ -307,9 +307,9 @@ func calculatePlanet(
 	chartType ChartType,
 	ascendantZodiacalPos *zodiacalpos.ZodiacalPos,
 ) (*astropoint.AstroPoint, error) {
-	flag := C.int(0)
+	flag := C.int(C.SEFLG_MOSEPH)
 	if chartType.IsVarga() {
-		flag = C.int(C.SEFLG_SIDEREAL)
+		flag |= C.int(C.SEFLG_SIDEREAL)
 	}
 	// Add SEFLG_SPEED to flag
 	flag |= C.int(C.SEFLG_SPEED)

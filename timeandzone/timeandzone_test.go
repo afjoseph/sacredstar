@@ -21,7 +21,7 @@ func TestTimeAndZoneJSONSerialization(t *testing.T) {
 }
 
 func TestTimeConversion(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	tm := time.Date(1984, 9, 15, 16, 20, 0, 0, time.UTC)

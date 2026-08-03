@@ -41,7 +41,7 @@ func TestNewDashaTree(t *testing.T) {
 		},
 	}
 
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	for _, tc := range tcs {

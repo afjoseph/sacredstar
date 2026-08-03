@@ -21,7 +21,7 @@ func TestNewChart(t *testing.T) {
 		expectedZodiacalPositions map[pointid.PointID]*zodiacalpos.ZodiacalPos
 	}
 
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	for _, tc := range []testcase{
@@ -217,7 +217,7 @@ func TestNewChart(t *testing.T) {
 func TestNakshatra(t *testing.T) {
 	// Calculate different nakshatras for different birth times
 	// and compare with expected results
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	for _, tc := range []struct {

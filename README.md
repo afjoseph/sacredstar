@@ -10,6 +10,7 @@ It can be used to easily cast a chart and:
 - Calculates Vimshottari dashas
 - Supports traditional and modern planets
 - Supports sidereal and tropical charts
+- Runs on Moshier's analytical ephemeris (`swemmoon.c` for the moon, `swemplan.c` for the planets), so no ephemeris data files are read at runtime
 
 ## Applications using SacredStar
 - [Astrologos](https://astrologos.ai)
@@ -28,11 +29,22 @@ Also, you'll need to set up [SwissEph library]([swisseph](https://www.astro.com/
 
 This project uses [Just task runner](https://github.com/casey/just) to run project commands. You can install it on an OSX machine with `brew install just`. See the project for other installation instructions.
 
-This project uses [swisseph](https://www.astro.com/swisseph/swephinfo_e.htm) database, libraries and header files for calculation of planet and star positions.
+This project uses the [swisseph](https://www.astro.com/swisseph/swephinfo_e.htm) library and header files for calculation of planet and star positions.
 
 All the required files are bundled in `./ext/swisseph/`.
 
 In most cases, running `just build-and-symlink-swisseph` should be enough to set this project to work on your development machine.
+
+Note that only the library and headers are needed: swisseph's ephemeris data files are never read, since every calculation passes `SEFLG_MOSEPH`. See "Ephemeris backend" below.
+
+### Ephemeris backend
+
+Every `swe_calc_ut` call passes `SEFLG_MOSEPH`, which selects Moshier's analytical series (`swemmoon.c` for the moon, `swemplan.c` for the planets) instead of the compressed JPL data files (`*.se1`).
+
+- Nothing is read off disk, so there is no ephemeris path to configure and nothing to ship next to your binary
+- Drift against the `.se1` files is well under an arcsecond for the bodies this library computes (Sun through Pluto, plus the true node), i.e., far below any usable orb
+- Valid range is roughly 3000 BC to 3000 AD
+- Bodies Moshier doesn't cover (asteroids like Chiron) would need `SEFLG_SWIEPH` and the data files
 
 #### Explanation
 
@@ -42,9 +54,6 @@ This is the directory breakdown of swisseph
     - the swisseph library from astro.com
     - `./original_project` contains the original swisseph source files, downloaded verbatim from https://www.astro.com/ftp/swisseph/src/
         - crudely with `wget -r --no-parent https://www.astro.com/ftp/swisseph/src/`
-    - `./ephe` contains the ephemeris data files (i.e., position of stars and planets)
-        - Here's a breakdown of each <https://www.saravali.de/articles/calc_ephemfiles.html>
-        - Those files are used as is by the project. Don't remove or modify
     - `./include` contains the used header files
         - Those are copy-pasted from ./original_project
     - `./lib`
@@ -122,7 +131,8 @@ For example, here is William Lilly's "Considerations Before Judgement" implement
         package main
 
         import (
-            "flag"
+            "time"
+
             "github.com/afjoseph/sacredstar/chart"
             "github.com/afjoseph/sacredstar/house"
             "github.com/afjoseph/sacredstar/pointid"
@@ -133,13 +143,8 @@ For example, here is William Lilly's "Considerations Before Judgement" implement
         )
 
         func main() {
-            flag.Parse()
-
-            // See "Setting up SwissEph" in the README
-            swissEphPathFlag := flag.String("swisseph-path", "ext/swisseph/", "Path to the SwissEph library")
-
             // Init wrapper
-            mysacredstar := wrapper.NewWithPath(*swissEphPathFlag)
+            mysacredstar := wrapper.New()
             defer mysacredstar.Close()
 
             chartTime := time.Date(2025, 1, 9, 10, 21, 0, 0, time.UTC)

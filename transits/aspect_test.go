@@ -14,7 +14,7 @@ import (
 )
 
 func TestCalculateAspectJourney(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	type testCase struct {
@@ -135,7 +135,7 @@ func TestCalculateAspectJourney(t *testing.T) {
 }
 
 func TestTransitAspect_MarshalJSON(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	dt := time.Now()

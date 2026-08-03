@@ -14,7 +14,7 @@ import (
 )
 
 func TestCalculateIngressJourney(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	type testCase struct {
@@ -98,7 +98,7 @@ func TestCalculateIngressJourney(t *testing.T) {
 }
 
 func TestTransitIngress_MarshalJSON(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	dt := time.Now()

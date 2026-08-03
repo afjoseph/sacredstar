@@ -8,7 +8,7 @@ import (
 )
 
 func TestTimeConversion(t *testing.T) {
-	swe := NewWithBuiltinPath()
+	swe := New()
 	defer swe.Close()
 	tm := time.Date(1984, 9, 15, 16, 20, 0, 0, time.UTC)
 	jd := swe.GoTimeToJulianDay(tm)

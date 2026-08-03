@@ -11,7 +11,7 @@ import (
 )
 
 func TestCorrectJulianDateToZodiacalPos(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	type TestCase struct {

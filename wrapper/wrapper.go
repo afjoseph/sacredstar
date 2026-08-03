@@ -9,25 +9,13 @@ import (
 )
 import (
 	"math"
-	"path/filepath"
 	"time"
 	"unsafe"
-
-	"github.com/afjoseph/sacredstar/projectpath"
 )
 
 type SwissEph struct{}
 
-func NewWithBuiltinPath() *SwissEph {
-	return NewWithPath(
-		filepath.Join(projectpath.Root, "ext", "swisseph"),
-	)
-}
-
-func NewWithPath(path string) *SwissEph {
-	path = filepath.Join(path, "ephe")
-
-	C.swe_set_ephe_path(C.CString(path))
+func New() *SwissEph {
 	C.swe_set_sid_mode(C.SE_SIDM_LAHIRI, 0, 0)
 	return &SwissEph{}
 }

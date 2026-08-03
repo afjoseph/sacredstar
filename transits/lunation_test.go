@@ -13,7 +13,7 @@ import (
 )
 
 func TestCalculateLunationJourney(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	type testCase struct {
@@ -71,7 +71,7 @@ func TestCalculateLunationJourney(t *testing.T) {
 }
 
 func TestTransitLunation_MarshalJSON(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 
 	// New moon

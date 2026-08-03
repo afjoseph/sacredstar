@@ -11,7 +11,7 @@ import (
 )
 
 func TestAnalyzeAscendantsForTimeInterval(t *testing.T) {
-	swe := wrapper.NewWithBuiltinPath()
+	swe := wrapper.New()
 	defer swe.Close()
 	type testCase struct {
 		name     string
